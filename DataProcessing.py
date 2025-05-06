@@ -74,10 +74,10 @@ print("teams table: ", dft.head())
 
 teams_db = pd.read_sql("SELECT team, team_id FROM teams", engine)
 
-team_counting_stats_needed = ['team','g','mp','fg','fga','fg_pct','3p','3pa','3p_pct','2p','2p_pct','ft','fta','ft_pct','orb','drb','trb','ast','stl','blk','tov','pf','pts']
+team_counting_stats_needed = ['team','g','mp','fg','fga','fg_pct','3p','3pa','3p_pct','2p','2pa','2p_pct','ft','fta','ft_pct','orb','drb','trb','ast','stl','blk','tov','pf','pts']
 team_counting_stats = team_counting_data[team_counting_stats_needed]
 team_counting_stats_merged = team_counting_stats.merge(teams_db, on = ['team'])
-team_counting_stats_final = team_counting_stats_merged[['team_id','g','mp','fg','fga','fg_pct','3p','3pa','3p_pct','2p','2p_pct','ft','fta','ft_pct','orb','drb','trb','ast','stl','blk','tov','pf','pts']]
+team_counting_stats_final = team_counting_stats_merged[['team_id','g','mp','fg','fga','fg_pct','3p','3pa','3p_pct','2p','2pa','2p_pct','ft','fta','ft_pct','orb','drb','trb','ast','stl','blk','tov','pf','pts']]
 team_counting_stats_final.to_sql('team_counting_stats',engine,if_exists='append',index=False)
 
 dft2 = pd.read_sql("SELECT * FROM team_counting_stats", engine)
