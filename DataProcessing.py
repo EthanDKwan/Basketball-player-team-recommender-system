@@ -17,7 +17,13 @@ counting_data = pd.read_excel('BBallrefData.xlsx', sheet_name = 'Counting Stats'
 advanced_data = pd.read_excel('BBallrefData.xlsx',sheet_name = 'Advanced Stats')
 
 #Writing to PostgreSQL
-engine = create_engine('postgresql://postgres:4049@localhost:5432/NBA Player stats')
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+DATABASE_URL = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/NBA Player stats"
+engine = create_engine(DATABASE_URL)
+
 #print(engine.table_names()) # Lets you see the names of the tables present in the database
 #FULL RESET of tables
 with engine.begin() as conn:

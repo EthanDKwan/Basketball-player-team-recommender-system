@@ -7,7 +7,12 @@ Created on Thu May  1 12:56:29 2025
 
 from sqlalchemy import text, create_engine, inspect
 import pandas as pd
-engine = create_engine('postgresql://postgres:4049@localhost:5432/NBA Player stats')
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+DATABASE_URL = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/NBA Player stats"
+engine = create_engine(DATABASE_URL)
 
 # My 3 Tables in SQL Database
 pd.read_sql("SELECT COUNT(*) FROM players",engine)

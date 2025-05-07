@@ -16,7 +16,12 @@ from sklearn.metrics.pairwise import cosine_similarity
 import matplotlib.pyplot as plt
 import numpy as np
 
-engine = create_engine('postgresql://postgres:4049@localhost:5432/NBA Player stats')
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+DATABASE_URL = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/NBA Player stats"
+engine = create_engine(DATABASE_URL)
 
 q = """
 SELECT p.age, c.*, a.*
