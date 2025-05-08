@@ -26,8 +26,8 @@ app.add_middleware(
 )
 
 load_dotenv()
-DATABASE_URL = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/NBA Player stats"
-engine = create_engine(DATABASE_URL)
+neonconnection=os.getenv('neonconnectionstring')
+engine = create_engine(neonconnection)
 #engine = create_engine('postgresql://postgres:4049@localhost:5432/NBA Player stats')
 q_meta = """
 SELECT p.player_id,p.player_name,p.pos,p.team, c.pts, c.trb, c.ast
