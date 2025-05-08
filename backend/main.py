@@ -88,6 +88,10 @@ async def autocomplete_teams(query: str) -> dict:
     suggestions = [team for team in df.columns.tolist() if query.lower() in team.lower()]
     return {"suggestions": suggestions[:10]}
 
+@app.get("/health")
+def health_check():
+    return {"status": "ok"}
+
 @app.get("/api/recommend-players/{team_name}")
 async def recommend(team_name: str, top_n: int = 5):
     """Get top N player recommendations for a team"""
