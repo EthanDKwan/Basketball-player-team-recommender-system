@@ -19,7 +19,10 @@ app = FastAPI(title="2025 NBA Recommender API")
 # Allow CORS for your Next.js frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://127.0.0.1:3000", "http://localhost:3000"],  # For demo only! Tighten for production.
+    allow_origins=[
+        "http://localhost:3000",  # For local development
+        "https://your-vercel-app.vercel.app",  # production frontend
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=['*']
@@ -29,7 +32,6 @@ app.add_middleware(
 load_dotenv()
 neonconnection=os.getenv('neonconnectionstring')
 engine = create_engine(neonconnection)
-#engine = create_engine('postgresql://postgres:4049@localhost:5432/NBA Player stats')
 q_meta = """
 SELECT p.player_id,p.player_name,p.pos,p.team, c.pts, c.trb, c.ast
 FROM players p

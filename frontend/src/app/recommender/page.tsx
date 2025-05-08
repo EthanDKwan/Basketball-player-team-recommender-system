@@ -49,7 +49,7 @@ export default function Recommender() {
           ? `/api/autocomplete-teams/${encodeURIComponent(input)}`
           : `/api/autocomplete-players/${encodeURIComponent(input)}`
         
-        const res = await fetch(`http://localhost:8000${endpoint}`)
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`)
         if (!res.ok) throw new Error('Failed to fetch suggestions')
         
         const data = await res.json()
@@ -77,7 +77,7 @@ export default function Recommender() {
         ? `/api/recommend-players/${encodeURIComponent(input)}`
         : `/api/recommend-teams/${encodeURIComponent(input)}`
       
-      const res = await fetch(`http://localhost:8000${endpoint}`)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${endpoint}`)
       if (!res.ok) throw new Error(res.status === 404 ? 'Not found' : 'Network error')
       
       const data = await res.json()
