@@ -25,6 +25,7 @@ app.add_middleware(
     allow_headers=['*']
 )
 
+
 load_dotenv()
 neonconnection=os.getenv('neonconnectionstring')
 engine = create_engine(neonconnection)
@@ -50,6 +51,10 @@ team_metadata = pd.read_sql(team_q_meta,engine)
 # Load your recommender DataFrame
 df = pd.read_pickle("heuristic_recommender_core.pkl")
 df = df[~df.index.duplicated(keep='first')]
+
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to the Recommender System API"}
 
 @app.get("/api/teams")
 async def get_teams():
