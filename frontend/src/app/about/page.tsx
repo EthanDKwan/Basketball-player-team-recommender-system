@@ -34,7 +34,7 @@ export default function AboutPage() {
           </p>
           
           <p>
-            NBA front-offices or fans shouldn&apos;t need to understand PCA and cosine-similarity values - they want insights about their favorite players and teams. This dashboard demonstrates how a recommender system fed by current and robust player statistics can integrate into a simple, interpretable tool for assisting decision-making processes. <br/>
+            NBA front-offices or fans shouldn&apos;t need to understand PCA and cosine-similarity values; they want insights about their favorite players and teams. This dashboard demonstrates how a recommender system fed by current and robust player statistics can integrate into a simple, interpretable tool for assisting decision-making processes. <br/>
           </p>
           
           <h2 className="text-xl font-semibold text-amber-100">About</h2>

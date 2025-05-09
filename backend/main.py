@@ -93,7 +93,7 @@ def health_check():
     return {"status": "ok"}
 
 @app.get("/api/recommend-players/{team_name}")
-async def recommend(team_name: str, top_n: int = 5):
+async def recommend(team_name: str, top_n: int = 8):
     """Get top N player recommendations for a team"""
     if team_name not in df.columns:
         return {"error": "Team not found"}    
