@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react'
 import { TrophyIcon, UserIcon, SparklesIcon, SearchIcon, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 
+// RECOMMENDER RECOMMENDER RECOMMENDER
+
 type PlayerRecommendation = {
   player_name: string;
   score: number;
@@ -33,6 +35,7 @@ export default function Recommender() {
   const [error, setError] = useState<string | null>(null)
   const [suggestions, setSuggestions] = useState<string[]>([])
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0) // To track selected suggestion
   const inputRef = useRef<HTMLInputElement>(null)
 
   // Fetch autocomplete suggestions
@@ -118,27 +121,45 @@ export default function Recommender() {
     return 'player_name' in item
   }
 
+  // Handle keydown events for input
+const handleKeyDown = (e: React.KeyboardEvent) => {
+  if (e.key === 'Enter') {
+    if (showSuggestions && suggestions.length > 0) {
+      // Select the suggestion when Enter is pressed
+      handleSuggestionClick(suggestions[selectedSuggestionIndex])
+    } else {
+      // Otherwise, fetch the recommendations when Enter is pressed
+      fetchRecommendations()
+    }
+  } else if (e.key === 'ArrowDown') {
+    setSelectedSuggestionIndex((prevIndex) => Math.min(prevIndex + 1, suggestions.length - 1))
+  } else if (e.key === 'ArrowUp') {
+    setSelectedSuggestionIndex((prevIndex) => Math.max(prevIndex - 1, 0))
+  }
+}
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-amber-900 p-4 md:p-8">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <header className="text-center mb-10">
-  <h1 className="text-3xl md:text-4xl font-bold text-amber-100 mb-2 flex items-center justify-center gap-2">
-    <SparklesIcon className="text-amber-400" /> NBA Player-Team Synergy Recommender System
-  </h1>
-  <p className="text-amber-200">
-    Discover optimal player-team matches with ML-driven recommendations
-  </p>
-  <div className="flex justify-center gap-4 mt-4">
-    <Link href="/about" className="text-amber-400 hover:text-amber-300 text-sm">
-      About
-    </Link>
-    <Link href="/examples" className="text-amber-400 hover:text-amber-300 text-sm">
-      Examples
-    </Link>
-  </div>
-
-
+          <h1 className="text-3xl md:text-4xl font-bold text-amber-100 mb-2 flex items-center justify-center gap-2">
+            <SparklesIcon className="text-amber-400" /> NBA Player-Team Synergy Recommender System
+          </h1>
+          <p className="text-amber-200">
+            Discover optimal player-team matches with ML-driven recommendations
+          </p>
+          <div className="flex justify-center gap-4 mt-4">
+	    <Link href="/explore" className="text-amber-400 hover:text-amber-300 text-sm">
+              Explore
+            </Link>            
+	    <Link href="/examples" className="text-amber-400 hover:text-amber-300 text-sm">
+              Examples
+            </Link>
+            <Link href="/about" className="text-amber-400 hover:text-amber-300 text-sm">
+              About
+            </Link>
+          </div>
         </header>
 
         {/* Mode Toggle */}
@@ -147,9 +168,7 @@ export default function Recommender() {
             <button
               onClick={() => handleModeChange('team')}
               className={`flex items-center px-4 py-2 rounded-md transition-colors ${
-                mode === 'team'
-                  ? 'bg-amber-600 text-white shadow-md'
-                  : 'text-amber-100 hover:bg-gray-700'
+                mode === 'team' ? 'bg-amber-600 text-white shadow-md' : 'text-amber-100 hover:bg-gray-700'
               }`}
             >
               <TrophyIcon className="w-5 h-5 mr-2" />
@@ -158,9 +177,7 @@ export default function Recommender() {
             <button
               onClick={() => handleModeChange('player')}
               className={`flex items-center px-4 py-2 rounded-md transition-colors ${
-                mode === 'player'
-                  ? 'bg-amber-600 text-white shadow-md'
-                  : 'text-amber-100 hover:bg-gray-700'
+                mode === 'player' ? 'bg-amber-600 text-white shadow-md' : 'text-amber-100 hover:bg-gray-700'
               }`}
             >
               <UserIcon className="w-5 h-5 mr-2" />
@@ -190,13 +207,9 @@ export default function Recommender() {
                   }}
                   onFocus={handleInputFocus}
                   onBlur={handleInputBlur}
-                  placeholder={
-                    mode === 'team' 
-                      ? 'e.g. LAL, GSW, BOS...' 
-                      : 'e.g. LeBron James, Stephen Curry...'
-                  }
+                  placeholder={mode === 'team' ? 'e.g. LAL, GSW, BOS...' : 'e.g. LeBron James, Stephen Curry...'}
                   className="flex-1 px-4 py-3 bg-gray-700 text-amber-100 border border-gray-600 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent placeholder-amber-200"
-                  onKeyDown={(e) => e.key === 'Enter' && fetchRecommendations()}
+                  onKeyDown={handleKeyDown} // Add key down handler here
                 />
                 <button
                   onClick={fetchRecommendations}
@@ -211,7 +224,7 @@ export default function Recommender() {
                   <span className="ml-2 hidden sm:inline">Search</span>
                 </button>
               </div>
-              
+
               {/* Suggestions dropdown */}
               {showSuggestions && (
                 <div className="absolute z-10 mt-1 w-full bg-gray-700 rounded-lg shadow-lg border border-gray-600 max-h-60 overflow-auto">
@@ -224,17 +237,17 @@ export default function Recommender() {
                       {suggestions.map((suggestion, index) => (
                         <li
                           key={index}
-                          className="px-4 py-2 hover:bg-gray-600 cursor-pointer text-amber-100"
+                          className={`px-4 py-2 hover:bg-gray-600 cursor-pointer text-amber-100 ${
+                            selectedSuggestionIndex === index ? 'bg-gray-600' : ''
+                          }`}
                           onClick={() => handleSuggestionClick(suggestion)}
                         >
                           {suggestion}
                         </li>
                       ))}
                     </ul>
-                  ) : input.length >= 2 && (
-                    <div className="px-4 py-2 text-amber-300 text-sm">
-                      No {mode === 'team' ? 'teams' : 'players'} found
-                    </div>
+                  ) : (
+                    <div className="px-4 py-2 text-amber-100">No suggestions found</div>
                   )}
                 </div>
               )}
@@ -242,23 +255,7 @@ export default function Recommender() {
           </div>
         </div>
 
-        {/* Error State */}
-        {error && (
-          <div className="max-w-xl mx-auto mb-8 bg-red-900 border-l-4 border-red-500 p-4 rounded-r-lg">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 text-red-400">
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div className="ml-3">
-                <p className="text-sm text-red-200">{error}</p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Results */}
+         {/* Results */}
         {results.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {results.map((item, index) => (

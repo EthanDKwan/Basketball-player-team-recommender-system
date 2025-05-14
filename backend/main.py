@@ -9,7 +9,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 import pandas as pd
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from dotenv import load_dotenv
 import os
 
@@ -143,3 +143,38 @@ async def get_all_data():
             "teams": df.columns.tolist(),
             "data":df.to_dict()
             }
+
+@app.get("/api/allplayers/pca")
+async def get_all_players_pca():
+    query = """
+    SELECT p.player_name, e.pc1, e.pc2, p.team 
+    FROM players_engineered e
+    JOIN players p ON e.player_id = p.player_id
+    """
+    with engine.connect() as conn:
+        result = conn.execute(text(query))
+        return [dict(row) for row in result.mappings()]
+
+@app.get("/api/players/pca/{player_name}")
+async def get_players_pca(player_name: str):
+    query = """
+    SELECT p.player_name, e.pc1, e.pc2 
+    FROM players_engineered e
+    JOIN players p ON e.player_id = p.player_id
+    WHERE p.player_name ILIKE :name
+    """
+    with engine.connect() as conn:
+        result = conn.execute(text(query), {"name": f"%{player_name}%"})
+        return [dict(row) for row in result.mappings()]
+    
+@app.get("/api/teams/pca/{team_name}")
+async def get_teams_pca(team_name: str):
+    query = """
+    SELECT p.player_name, e.pc1, e.pc2 
+    FROM players_engineered e
+    JOIN players p ON e.player_id = p.player_id
+    WHERE p.team ILIKE :team
+    """
+    with engine.connect() as conn:
+        result = conn.execute(text(query), {"team": f"%{team_name}%"})
+        return [dict(row) for row in result.mappings()]

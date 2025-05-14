@@ -1,34 +1,40 @@
 // app/examples/page.tsx
 'use client';
-import { BarChart, BasketballIcon } from 'lucide-react'; // Or use custom icons
+import { BarChart, ShoppingBasket } from 'lucide-react'; // Or use custom icons
 
 export default function ExamplesPage() {
   const featuredMatches = [
     {
-      player: "Fred VanVleet",
-      team: "Houston Rockets",
+      player: "Zach LaVine",
+      team: "Denver Nuggets",
       score: 0.99,
-      insight: "Elite 3PT shooting, scoring, and veteran leadership complements a young defensive minded team"
+      insight: "Elite 3PT shooting, off-ball scoring and wing length to complement a heliocentric offense built on cutting and spacing"
     },
     {
-      player: "Jusuf Nurkic",
-      team: "Los Angeles Lakers",
-      score: 0.80,
-      insight: "Pick and roll big to complement an offense with two primary ball handlers and offering rim protection at a veteran's discount"
-    }
-  ];
+      player: "Scottie Barnes",
+      team: "Oklahoma City Thunder",
+      score: 0.98,
+      insight: "All star wing whose post scoring and athleticism complements an elite defense"
+    },
+	{
+      player: "Landry Shamet",
+      team: "New Orleans Pelicans",
+      score: 0.98,
+      insight: "Elite 3PT shooting role player who has fallen out of the lineup in NYK, a title contender stacked with guard talent"
+    },
 {
-      player: "Micah Potter",
-      team: "Utah Jazz",
-      score: 0.96,
-      insight: "Floor spacing big primarily playing in G league showing year over year growth in Utah system"
+      player: "Day'ron Sharpe",
+      team: "Boston Celtics",
+      score: 0.98,
+      insight: "Bruising young forward who has improved FT shooting over his young career"
     }
+];
 
 
   return (
     <div className="max-w-6xl mx-auto p-6">
       <h1 className="text-3xl font-bold flex items-center gap-2 mb-8">
-        <BasketballIcon className="text-orange-500" /> 
+        <ShoppingBasket className="text-orange-500" /> 
         Recommended Player-Team Matches
       </h1>
 

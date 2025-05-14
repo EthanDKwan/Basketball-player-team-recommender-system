@@ -7,7 +7,7 @@ Created on Thu May  1 15:08:29 2025
 import os
 os.environ["OMP_NUM_THREADS"] = "2"
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, MetaData
 import pandas as pd
 from sklearn.preprocessing import StandardScaler, normalize
 from sklearn.decomposition import PCA
@@ -84,6 +84,27 @@ player_vectors = player_pca.fit_transform(player_scaled)
 player_names = player_metadata['player_name'].values
 player_vectors_df = pd.DataFrame(player_vectors,columns=[f"player_pc{i}" for i in range(1,6)],index = player_names)
 
+players_pca = player_vectors_df[['player_pc1','player_pc2']].copy()
+players_pca = players_pca.reset_index()
+players_pca = players_pca.rename(columns = {
+    'index':'player_name',
+    'player_pc1':'pc1',
+    'player_pc2':'pc2'})
+
+players_db = pd.read_sql("SELECT player_name, player_id, team FROM players", engine)
+players_pca_merged = players_pca.merge(players_db, on=['player_name'])
+players_pca_final = players_pca_merged[['player_id','pc1','pc2']]
+players_pca_final.to_sql('players_engineered',engine,if_exists='append',index=False)
+
+neonconnection=os.getenv('neonconnectionstring')
+neon_engine = create_engine(neonconnection)
+
+print(f"Transferring 'players_engineered'...")
+df = pd.read_sql(f"SELECT * FROM players_engineered", engine)
+df.to_sql('players_engineered', neon_engine, if_exists='replace', index=False)
+print(f"✅  playeres_engineered row copied")
+
+print("All tables transferred!")
 
 """
 TEAM STATS--------------------------------------------------------------------
@@ -161,22 +182,3 @@ print("Lakers fits: ", LAL_fits)
 print("Giannis fits: ", Giannis_fits)
  
 
-"""
-silhouette_scores = []
-k_range = range(2, 11)  # Evaluates k=2 through k=10
-for k in k_range:
-    # Fit K-means
-    kmeans = KMeans(n_clusters=k, n_init=10, random_state=42)
-    cluster_labels = kmeans.fit_predict(player_vectors)  # Use PCA-reduced or standardized data    
-    # Compute silhouette score
-    score = silhouette_score(player_vectors, cluster_labels)
-    silhouette_scores.append(score)
-    print(f"k={k}: Silhouette Score = {score:.3f}")
-# Plot the silhouette scores against the number of clusters (K)
-plt.plot(k_range, silhouette_scores, marker='o')
-plt.xlabel("Number of Clusters (k)")
-plt.ylabel("Silhouette Score")
-plt.title("Silhouette Scores for K-means Clustering")
-plt.grid(True)
-plt.show()
-"""

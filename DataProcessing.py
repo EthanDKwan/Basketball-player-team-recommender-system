@@ -109,7 +109,7 @@ Uploading from local SQL database to neon cloud SQL database
 neonconnection=os.getenv('neonconnectionstring')
 neon_engine = create_engine(neonconnection)
 
-tables = ['players', 'counting_stats', 'advanced_stats', 'teams','team_counting_stats','team_advanced_stats']  # Your tables
+tables = ['players', 'counting_stats', 'advanced_stats','players_engineered', 'teams','team_counting_stats','team_advanced_stats']  # Your tables
 
 for table in tables:
     print(f"Transferring {table}...")
