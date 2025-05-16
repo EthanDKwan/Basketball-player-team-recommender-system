@@ -1,12 +1,18 @@
 'use client'
+
+/* eslint-disable @next/next/no-img-element */
+
 import { useEffect, useRef } from 'react'
-interface Tableau {
-  Viz: new (container: HTMLElement, url: string, options?: object) => unknown;
-}
 
 declare global {
   interface Window {
-    tableau?: Tableau;
+    tableau?: {
+      Viz: new (
+        containerDiv: HTMLElement,
+        url: string,
+        options?: Record<string, unknown>
+      ) => void;
+    };
   }
 }
 
@@ -24,15 +30,14 @@ const TableauEmbed = ({
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (!containerRef.current) return
-
     const divElement = containerRef.current
-    const vizElement = divElement.getElementsByTagName('object')[0] || document.createElement('object')
+    if (!divElement) return
 
+    const vizElement = document.createElement('object')
     vizElement.className = 'tableauViz'
     vizElement.style.display = 'none'
     vizElement.style.width = '100%'
-    vizElement.style.height = (divElement.offsetWidth * aspectRatio) + 'px'
+    vizElement.style.height = `${divElement.offsetWidth * aspectRatio}px`
 
     const paramNames = [
       'host_url', 'embed_code_version', 'site_root', 'name', 'tabs',
@@ -63,11 +68,19 @@ const TableauEmbed = ({
 
     scriptElement.onload = () => {
       console.log('[DEBUG] Tableau JS API loaded successfully')
-      new window.tableau.Viz(
-        divElement,
-        `https://public.tableau.com/views/${vizUrl}`,
-        { hideTabs: true, width: '100%', height: `${divElement.offsetWidth * aspectRatio}px` }
-      )
+      if (window.tableau && divElement) {
+        new window.tableau.Viz(
+          divElement,
+          `https://public.tableau.com/views/${vizUrl}`,
+          {
+            hideTabs: true,
+            width: '100%',
+            height: `${divElement.offsetWidth * aspectRatio}px`
+          }
+        )
+      } else {
+        console.error('[DEBUG] window.tableau or container div is undefined')
+      }
     }
 
     scriptElement.onerror = () => {
@@ -77,9 +90,7 @@ const TableauEmbed = ({
     divElement.appendChild(scriptElement)
 
     return () => {
-      if (divElement.contains(scriptElement)) {
-        divElement.removeChild(scriptElement)
-      }
+      divElement.innerHTML = '' // Clean up everything on unmount
     }
   }, [vizUrl, aspectRatio])
 
@@ -87,10 +98,7 @@ const TableauEmbed = ({
     <div
       ref={containerRef}
       className="tableauPlaceholder w-full"
-      style={{
-        position: 'relative',
-        minHeight: `${minHeight}px`
-      }}
+      style={{ position: 'relative', minHeight: `${minHeight}px` }}
     >
       <noscript>
         <a href="#">
