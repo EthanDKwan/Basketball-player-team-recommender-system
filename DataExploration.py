@@ -12,7 +12,11 @@ import os
 
 load_dotenv()
 DATABASE_URL = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/NBA Player stats"
+neonconnection=os.getenv('neonconnectionstring')
+neon_engine = create_engine(neonconnection)
 engine = create_engine(DATABASE_URL)
+
+
 
 # My 3 Tables in SQL Database
 pd.read_sql("SELECT COUNT(*) FROM players",engine)
@@ -87,6 +91,22 @@ pd.read_sql("""
             WHERE c.pts <100
             ORDER BY a.w DESC
             """,engine)
+            
+q_meta = """
+            SELECT p.player_id,p.player_name,p.pos,p.team
+            FROM players p
+            JOIN counting_stats c USING(player_id)
+            WHERE c.mp>500 AND c."3p_pct" IS NOT NULL AND c.fg_pct IS NOT NULL AND c.ft_pct IS NOT NULL
+            ORDER BY p.player_id
+            """
+            
+pd.read_sql("""
+            SELECT p.player_name, c.mp,p.pos
+            FROM players p JOIN counting_stats c
+            ON p.player_id = c.player_id
+            WHERE c.mp >500 c."3p_pct" IS NOT NULL AND c.fg_pct IS NOT NULL AND c.ft_pct IS NOT NUL
+            ORDER BY p.player_id DESC;
+            """,neon_engine)
             
 pd.read_sql("""
             SELECT t.team, a.pw, a.w

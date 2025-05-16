@@ -31,7 +31,7 @@ JOIN advanced_stats a USING (player_id)
 WHERE c.mp>500 AND c."3p_pct" IS NOT NULL AND c.fg_pct IS NOT NULL AND c.ft_pct IS NOT NULL
 ORDER BY p.player_id
 """
-player_stats= pd.read_sql(q,engine).drop(columns=['player_id'])
+player_stats= pd.read_sql(q,engine).drop(columns=['player_id']) ##THIS IS THE LIST OF PLAYERS USED
 
 q_meta = """
 SELECT p.player_id,p.player_name,p.pos,p.team
@@ -89,19 +89,20 @@ players_pca = players_pca.reset_index()
 players_pca = players_pca.rename(columns = {
     'index':'player_name',
     'player_pc1':'pc1',
-    'player_pc2':'pc2'})
+    'player_pc2':'pc2'}) #THIS IS WHAT I PUT INTO THE .CSV
 
-players_db = pd.read_sql("SELECT player_name, player_id, team FROM players", engine)
+
+players_db = pd.read_sql("SELECT p.player_name, p.player_id, p.team, p.pos, c.mp FROM players p JOIN counting_stats c ON p.player_id=c.player_id", engine)
 players_pca_merged = players_pca.merge(players_db, on=['player_name'])
 players_pca_final = players_pca_merged[['player_id','pc1','pc2']]
-players_pca_final.to_sql('players_engineered',engine,if_exists='append',index=False)
+#players_pca_final.to_sql('players_engineered',engine,if_exists='append',index=False)
 
 neonconnection=os.getenv('neonconnectionstring')
 neon_engine = create_engine(neonconnection)
 
 print(f"Transferring 'players_engineered'...")
 df = pd.read_sql(f"SELECT * FROM players_engineered", engine)
-df.to_sql('players_engineered', neon_engine, if_exists='replace', index=False)
+#df.to_sql('players_engineered', neon_engine, if_exists='replace', index=False)
 print(f"✅  playeres_engineered row copied")
 
 print("All tables transferred!")
