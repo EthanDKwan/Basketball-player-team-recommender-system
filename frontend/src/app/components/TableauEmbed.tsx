@@ -1,8 +1,12 @@
 'use client'
 import { useEffect, useRef } from 'react'
+interface Tableau {
+  Viz: new (container: HTMLElement, url: string, options?: object) => unknown;
+}
+
 declare global {
   interface Window {
-    tableau: any;
+    tableau?: Tableau;
   }
 }
 
