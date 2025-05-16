@@ -3,8 +3,35 @@
 
 import Link from 'next/link';
 
+interface MatchCardProps {
+  player: string;
+  team: string;
+  score: number;
+  insight: string;
+}
+
+function MatchCard({ player, team, score, insight }: MatchCardProps) {
+  return (
+    <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+      <div className="flex justify-between items-start mb-2">
+        <h3 className="text-xl font-bold">{player} → {team}</h3>
+        <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+          Score: {score.toFixed(2)}
+        </span>
+      </div>
+      <p className="text-gray-600">{insight}</p>
+      <div className="mt-4 h-8 bg-gray-100 rounded-full">
+        <div
+          className="h-full bg-green-500 rounded-full"
+          style={{ width: `${score * 100}%` }}
+        />
+      </div>
+    </div>
+  );
+}
+
 export default function ExamplesPage() {
-  const featuredMatches = [
+  const featuredMatches: MatchCardProps[] = [
     {
       player: "Zach LaVine",
       team: "Denver Nuggets",
@@ -70,26 +97,6 @@ export default function ExamplesPage() {
           {/* Placeholder for embedded visualization */}
           
         </div>
-      </div>
-    </div>
-  );
-}
-
-function MatchCard({ player, team, score, insight }) {
-  return (
-    <div className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-      <div className="flex justify-between items-start mb-2">
-        <h3 className="text-xl font-bold">{player} → {team}</h3>
-        <span className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-          Score: {score.toFixed(2)}
-        </span>
-      </div>
-      <p className="text-gray-600">{insight}</p>
-      <div className="mt-4 h-8 bg-gray-100 rounded-full">
-        <div
-          className="h-full bg-green-500 rounded-full"
-          style={{ width: `${score * 100}%` }}
-        />
       </div>
     </div>
   );
