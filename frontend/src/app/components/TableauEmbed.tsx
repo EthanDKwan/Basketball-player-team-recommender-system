@@ -1,5 +1,10 @@
 'use client'
 import { useEffect, useRef } from 'react'
+declare global {
+  interface Window {
+    tableau: any;
+  }
+}
 
 interface TableauEmbedProps {
   vizUrl: string
