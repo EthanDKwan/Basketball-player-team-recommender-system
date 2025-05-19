@@ -33,11 +33,12 @@ This recommender system uses machine learning and a heuristic-based recommender 
  
 *Example: "Why Zach Lavine fits the Nuggets → Elite wing scoring + secondary ball handling + defensive versatility"*  
 
-### 3. Statistical Visualizer
+### 3. Interactive Statistical Visualizer
 <div align="center">
   <img src="./screenshots/Demo_screenshot_visualizer.png" alt="Visualizer" width="45%"/>
-*Offensive and Defensive impact visualized per player vs players on a team*  
-Tableau's JS API was used to embed visualizations directly into the react explore page.
+</div>
+- Offensive and Defensive impact visualized per player and for players on a team
+- Tableau's JS API was used to embed visualizations directly into the react explore page.
 
 ## Technology Stack  
 | Component       | Technology               | Hosting  |
