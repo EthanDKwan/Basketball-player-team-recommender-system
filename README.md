@@ -16,23 +16,21 @@ This system suggests optimal NBA player-team fits using:
 <div align="center">
   <img src="./screenshots/Demo_screenshot_recommender.png" alt="Recommender" width="45%"/>
 </div>
-
-![Recommender Interface](./screenshots/Demo screenshot_recommender.png)  
-*Example: "Show me players who fit the current Laker's roster"*  
+ 
+*Example: "Show me teams which fit Devin Booker's playstyle"*  
 
 ### 2. Strong player-team alignment examples
 <div align="center">
   <img src="./screenshots/Demo_screenshot_examples.png" alt="Examples" width="45%"/>
 </div>
-![Examples](./screenshots/Demo screenshot_examples.png)  
+ 
 *Example: "Why Zach Lavine fits the Nuggets → Elite wing scoring + secondary ball handling + defensive versatility"*  
 
 ### 3. Statistical Visualizer
-Tableau's JS API was used to embed visualizations directly into the react explore page.
 <div align="center">
   <img src="./screenshots/Demo_screenshot_visualizer.png" alt="Visualizer" width="45%"/>
-![Visualizer](./screenshots/Demo screenshot_visualizer.png)  
 *Offensive and Defensive impact visualized per player vs players on a team*  
+Tableau's JS API was used to embed visualizations directly into the react explore page.
 
 ## Technology Stack  
 | Component       | Technology               | Hosting  |
@@ -54,6 +52,7 @@ git clone https://github.com/yourusername/nba-recommender.git
 cd nba-recommender
 pip install -r backend/requirements.txt
 npm install --prefix frontend
+```
 
 ** Live Demo: [https://nbarecommender.vercel.app/recommender](https://nbarecommender.vercel.app/recommender)**  
 
