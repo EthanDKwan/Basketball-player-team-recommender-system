@@ -3,10 +3,17 @@
 
 ** Live Demo: [https://nbarecommender.vercel.app/recommender](https://nbarecommender.vercel.app/recommender)**  
 
-## Overview  
-This system suggests optimal NBA player-team fits using:  
-- **37 player metrics** (counting stats, advanced metrics, engineered features)  
-- **31 team metrics** (counting stats, advanced metrics, engineered features)
+### Why this exists
+Have you ever watched a player and thought: "they would be a great fit on x team. What if they could play with y player." As an NBA fan, I've had endless conversations about the latest trades, free-agent signings, etc. In the emergent era of sports analytics, performance metrics are abundant. From an NBA front-office perspective, there is great potential for data tools to improve performance, but only if the outputs are clear, trustworthy, and integrated into existing workflows.
+
+NBA front-offices or fans shouldn't need to understand PCA and cosine-similarity values; they want insights about their favorite players and teams. This dashboard demonstrates how a recommender system fed by current and robust player statistics can integrate into a simple, interpretable tool for assisting decision-making processes.
+
+## About
+This recommender system uses machine learning and a heuristic-based recommender derived from vectorized counting and advanced statistics for the 2024-2025 NBA season (BBallRef) to identify player-team matches based on performance data and playing styles.
+
+## Model
+- The model accounts for 68 raw metrics (37 team statistics and 31 individual player statistics) including shooting percentages, counting stats, defensive impact, and pace compatibility along with 10 engineered features. 
+- Each recommendation receives a score from 0 (least compatible) to 1 (most compatible) indicating the predicted synergy level.
 - Data sourced from [Basketball-Reference](https://www.basketball-reference.com/)  
 
 ##  Key Features  
